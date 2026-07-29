@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Byte-compile check
+        run: python -m compileall -q app config.py run.py scripts
+
+      - name: App boots and initializes DB
+        env:
+          FLASK_APP: run.py
+        run: |
+          flask init-db
+          python -c "from app import create_app; app = create_app(); assert app.url_map._rules, 'no routes registered'"
