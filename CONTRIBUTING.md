@@ -41,4 +41,4 @@ Open a [GitHub issue](https://github.com/Maaz-Saeed/fly-happy-travel-agency/issu
 
 ## Code of Conduct
 
-Be respectful and constructive. Assume good intent, and keep discussion focused on the code and the project.
+This project follows the [Code of Conduct](CODE_OF_CONDUCT.md). Be respectful and constructive, and keep discussion focused on the code and the project.
