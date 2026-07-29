@@ -1,0 +1,40 @@
+{% extends "admin/_base.html" %}
+{% block title %}Payments{% endblock %}
+{% block page_title %}Manage Payments{% endblock %}
+{% block content %}
+<div class="admin-table-card">
+  <form method="GET" class="row g-2 mb-3">
+    <div class="col-md-3"><input type="text" name="q" value="{{ search }}" class="form-control" placeholder="Search receipt or booking ID..."></div>
+    <div class="col-md-2">
+      <select name="status" class="form-select">
+        <option value="">All Status</option>
+        {% for s in ['pending','completed','failed'] %}<option value="{{ s }}" {% if status == s %}selected{% endif %}>{{ s|capitalize }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="col-md-3 d-flex gap-2">
+      <button class="btn btn-brand flex-fill">Filter</button>
+      <a href="{{ url_for('admin.export_payments') }}" class="btn btn-outline-brand" title="Export CSV"><i class="fa-solid fa-file-csv"></i></a>
+      <button type="button" class="btn btn-outline-brand btn-print" title="Print"><i class="fa-solid fa-print"></i></button>
+    </div>
+  </form>
+  <div class="table-responsive">
+    <table class="table table-brand align-middle">
+      <thead><tr><th>Receipt No</th><th>Booking ID</th><th>Method</th><th>Transaction ID</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
+      <tbody>
+        {% for p in payments %}
+        <tr>
+          <td>{{ p.receipt_number }}</td>
+          <td><a href="{{ url_for('admin.booking_detail', booking_id=p.booking.id) }}">{{ p.booking.booking_id }}</a></td>
+          <td>{{ p.method }}</td><td>{{ p.transaction_id }}</td>
+          <td>PKR {{ "{:,.0f}".format(p.amount) }}</td>
+          <td><span class="badge badge-status-{{ p.status }}">{{ p.status|capitalize }}</span></td>
+          <td>{{ p.paid_at.strftime('%d %b %Y') }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" class="text-center text-muted py-4">No payments found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "admin/_base.html" %}
+{% block title %}Packages{% endblock %}
+{% block page_title %}Manage Packages{% endblock %}
+{% block content %}
+<div class="admin-table-card">
+  <div class="d-flex justify-content-end mb-3">
+    <button class="btn btn-brand" data-bs-toggle="modal" data-bs-target="#addPackageModal"><i class="fa-solid fa-plus me-1"></i>Add Package</button>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-brand align-middle">
+      <thead><tr><th>Name</th><th>Destination</th><th>Category</th><th>Days</th><th>Price</th><th>Featured</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for p in packages %}
+        <tr>
+          <td>{{ p.name }}</td><td>{{ p.destination.city if p.destination else '-' }}</td><td>{{ p.category }}</td>
+          <td>{{ p.duration_days }}</td><td>PKR {{ "{:,.0f}".format(p.price) }}</td>
+          <td>{{ "Yes" if p.is_featured else "No" }}</td>
+          <td class="d-flex gap-1">
+            <button class="btn btn-sm btn-outline-brand" data-bs-toggle="modal" data-bs-target="#editPackage{{ p.id }}"><i class="fa-solid fa-pen"></i></button>
+            <form method="POST" action="{{ url_for('admin.delete_package', item_id=p.id) }}" onsubmit="return confirm('Delete this package?');">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" class="text-center text-muted py-4">No packages found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% for p in packages %}
+<div class="modal fade" id="editPackage{{ p.id }}" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form method="POST" action="{{ url_for('admin.edit_package', item_id=p.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="modal-header"><h5 class="modal-title">Edit {{ p.name }}</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-12"><label class="form-label">Package Name</label><input name="name" value="{{ p.name }}" class="form-control" required></div>
+            <div class="col-md-6"><label class="form-label">Destination</label>
+              <select name="destination_id" class="form-select">
+                {% for d in destinations %}<option value="{{ d.id }}" {% if p.destination_id == d.id %}selected{% endif %}>{{ d.city }}</option>{% endfor %}
+              </select>
+            </div>
+            <div class="col-md-6"><label class="form-label">Category</label>
+              <select name="category" class="form-select">
+                {% for c in ['Holiday','Family','Corporate','Group','Umrah','Hajj'] %}<option value="{{ c }}" {% if p.category == c %}selected{% endif %}>{{ c }}</option>{% endfor %}
+              </select>
+            </div>
+            <div class="col-md-6"><label class="form-label">Duration (Days)</label><input type="number" name="duration_days" value="{{ p.duration_days }}" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label">Price (PKR)</label><input type="number" step="0.01" name="price" value="{{ p.price }}" class="form-control"></div>
+            <div class="col-12"><label class="form-label">Inclusions</label><input name="inclusions" value="{{ p.inclusions or '' }}" class="form-control"></div>
+            <div class="col-12"><label class="form-label">Description</label><textarea name="description" class="form-control" rows="3">{{ p.description or '' }}</textarea></div>
+            <div class="col-12"><div class="form-check"><input type="checkbox" class="form-check-input" name="is_featured" {% if p.is_featured %}checked{% endif %}><label class="form-check-label">Featured</label></div></div>
+          </div>
+        </div>
+        <div class="modal-footer"><button type="submit" class="btn btn-brand">Save Changes</button></div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+<div class="modal fade" id="addPackageModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="modal-header"><h5 class="modal-title">Add Package</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-12"><label class="form-label">Package Name</label><input name="name" class="form-control" required></div>
+            <div class="col-md-6"><label class="form-label">Destination</label>
+              <select name="destination_id" class="form-select">{% for d in destinations %}<option value="{{ d.id }}">{{ d.city }}</option>{% endfor %}</select>
+            </div>
+            <div class="col-md-6"><label class="form-label">Category</label>
+              <select name="category" class="form-select">{% for c in ['Holiday','Family','Corporate','Group','Umrah','Hajj'] %}<option value="{{ c }}">{{ c }}</option>{% endfor %}</select>
+            </div>
+            <div class="col-md-6"><label class="form-label">Duration (Days)</label><input type="number" name="duration_days" value="5" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label">Price (PKR)</label><input type="number" step="0.01" name="price" class="form-control" required></div>
+            <div class="col-12"><label class="form-label">Inclusions</label><input name="inclusions" class="form-control" placeholder="Flights, Hotel, Transfers..."></div>
+            <div class="col-12"><label class="form-label">Description</label><textarea name="description" class="form-control" rows="3"></textarea></div>
+            <div class="col-12"><div class="form-check"><input type="checkbox" class="form-check-input" name="is_featured"><label class="form-check-label">Featured</label></div></div>
+          </div>
+        </div>
+        <div class="modal-footer"><button type="submit" class="btn btn-brand">Add Package</button></div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

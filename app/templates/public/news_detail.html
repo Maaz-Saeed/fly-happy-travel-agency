@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}{{ item.title }}{% endblock %}
+{% block content %}
+<div class="page-header-banner">
+  <div class="container">
+    <h1 data-aos="fade-up">{{ item.title }}</h1>
+    <p class="breadcrumb-custom"><a href="{{ url_for('public.home') }}">Home</a> / <a href="{{ url_for('public.news') }}">News</a> / <span class="current">{{ item.title }}</span></p>
+  </div>
+</div>
+<section class="section-pad">
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-8">
+        <img src="{{ url_for('static', filename='images/' ~ item.image) }}" class="img-fluid rounded-4 shadow mb-4" alt="{{ item.title }}">
+        <small class="text-muted">{{ item.published_at.strftime('%d %B %Y') }} &bull; By {{ item.author }}</small>
+        <p class="mt-3">{{ item.content }}</p>
+      </div>
+      <div class="col-lg-4">
+        <div class="card-elevated p-4">
+          <h6 class="mb-3">More News</h6>
+          {% for o in others %}
+          <a href="{{ url_for('public.news_detail', slug=o.slug) }}" class="d-block text-decoration-none text-dark mb-3">
+            <strong class="small">{{ o.title }}</strong>
+            <div class="text-muted small">{{ o.published_at.strftime('%d %b %Y') }}</div>
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Search Flights{% endblock %}
+{% block content %}
+<div class="page-header-banner">
+  <div class="container">
+    <h1 data-aos="fade-up">Book Your Flight</h1>
+    <p class="breadcrumb-custom"><a href="{{ url_for('public.home') }}">Home</a> / <span class="current">Book Now</span></p>
+  </div>
+</div>
+<section class="section-pad">
+  <div class="container">
+    <form method="GET" class="filter-bar mb-4" data-aos="fade-up">
+      <div class="row g-3 align-items-end">
+        <div class="col-md-9">
+          <label class="form-label small fw-semibold">Search Destination</label>
+          <input type="text" name="q" value="{{ q }}" class="form-control form-control-lg" placeholder="Search by city or country...">
+        </div>
+        <div class="col-md-3">
+          <button type="submit" class="btn btn-brand btn-lg w-100"><i class="fa-solid fa-magnifying-glass me-1"></i>Search</button>
+        </div>
+      </div>
+    </form>
+
+    {% if not current_user.is_authenticated %}
+    <div class="alert alert-info" data-aos="fade-up">
+      <i class="fa-solid fa-circle-info me-2"></i>Please <a href="{{ url_for('auth.login', next=request.path) }}">login</a> or <a href="{{ url_for('auth.register') }}">create an account</a> to complete a booking.
+    </div>
+    {% endif %}
+
+    <div class="row g-4">
+      {% for d in destinations %}
+      <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="{{ (loop.index0 % 8) * 40 }}">
+        <div class="card card-elevated destination-card h-100">
+          <span class="price-badge">PKR {{ "{:,.0f}".format(d.starting_price) }}</span>
+          <img src="{{ url_for('static', filename='images/' ~ d.image) }}" class="card-img-top-fixed" alt="{{ d.city }}">
+          <div class="card-body">
+            <h6 class="fw-bold mb-1">{{ d.city }}</h6>
+            <p class="text-muted small mb-2"><i class="fa-solid fa-location-dot me-1"></i>{{ d.country }}</p>
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('booking.new', destination_id=d.id) }}" class="btn btn-brand btn-sm w-100">Select &amp; Book</a>
+            {% else %}
+            <a href="{{ url_for('auth.login', next=url_for('booking.new', destination_id=d.id)) }}" class="btn btn-outline-brand btn-sm w-100">Login to Book</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div class="col-12 text-center py-5"><p class="text-muted">No destinations matched your search.</p></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

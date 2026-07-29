@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Contact Support{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-2 p-0">{% include "customer/_sidebar.html" %}</div>
+    <div class="col-lg-10 py-5 px-4 px-md-5">
+      <h3 class="mb-4">Contact Support</h3>
+      <div class="card-elevated p-4 p-md-5" style="max-width:700px;">
+        <form method="POST" novalidate>
+          {{ form.hidden_tag() }}
+          <div class="mb-3">
+            {{ form.name.label(class="form-label fw-semibold") }}
+            {{ form.name(class="form-control") }}
+          </div>
+          <div class="mb-3">
+            {{ form.email.label(class="form-label fw-semibold") }}
+            {{ form.email(class="form-control") }}
+          </div>
+          <div class="mb-3">
+            {{ form.phone.label(class="form-label fw-semibold") }}
+            {{ form.phone(class="form-control") }}
+          </div>
+          <div class="mb-3">
+            {{ form.subject.label(class="form-label fw-semibold") }}
+            {{ form.subject(class="form-control") }}
+          </div>
+          <div class="mb-3">
+            {{ form.message.label(class="form-label fw-semibold") }}
+            {{ form.message(class="form-control", rows="5") }}
+          </div>
+          <button type="submit" class="btn btn-brand btn-lg"><i class="fa-solid fa-paper-plane me-2"></i>Submit Request</button>
+        </form>
+        <hr>
+        <p class="text-muted small mb-0">You can also reach us directly at {{ company_phone }} or via WhatsApp at {{ company_whatsapp }} for urgent matters.</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

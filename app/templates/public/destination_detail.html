@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}{{ destination.city }}, {{ destination.country }}{% endblock %}
+{% block content %}
+<div class="page-header-banner" style="padding-top:110px;">
+  <div class="container">
+    <h1 data-aos="fade-up">{{ destination.city }}, {{ destination.country }}</h1>
+    <p class="breadcrumb-custom"><a href="{{ url_for('public.home') }}">Home</a> / <a href="{{ url_for('public.destinations') }}">Destinations</a> / <span class="current">{{ destination.city }}</span></p>
+  </div>
+</div>
+
+<section class="section-pad">
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-8">
+        <img src="{{ url_for('static', filename='images/' ~ destination.image) }}" class="img-fluid rounded-4 shadow mb-4" alt="{{ destination.city }}">
+        <h3>About {{ destination.city }}</h3>
+        <p class="text-muted">{{ destination.description }}</p>
+
+        <h4 class="mt-5">Available Packages</h4>
+        <div class="row g-3">
+          {% for p in packages %}
+          <div class="col-md-6">
+            <div class="card-elevated p-3 d-flex flex-row gap-3">
+              <img src="{{ url_for('static', filename='images/' ~ p.image) }}" style="width:90px;height:90px;object-fit:cover;border-radius:10px;">
+              <div>
+                <h6 class="fw-bold mb-1">{{ p.name }}</h6>
+                <p class="small text-muted mb-1">{{ p.duration_days }} Days &bull; {{ p.category }}</p>
+                <span class="fw-bold text-brand">PKR {{ "{:,.0f}".format(p.price) }}</span>
+              </div>
+            </div>
+          </div>
+          {% else %}
+          <p class="text-muted">No curated packages yet for this destination — you can still book a flight directly below.</p>
+          {% endfor %}
+        </div>
+
+        <h4 class="mt-5">Recommended Hotels</h4>
+        <div class="row g-3">
+          {% for h in hotels %}
+          <div class="col-md-6">
+            <div class="card-elevated p-3 d-flex flex-row gap-3">
+              <img src="{{ url_for('static', filename='images/' ~ h.image) }}" style="width:90px;height:90px;object-fit:cover;border-radius:10px;">
+              <div>
+                <h6 class="fw-bold mb-1">{{ h.name }}</h6>
+                <div class="rating-stars small">{% for i in range(h.star_rating) %}<i class="fa-solid fa-star"></i>{% endfor %}</div>
+                <span class="fw-bold text-brand">PKR {{ "{:,.0f}".format(h.price_per_night) }}/night</span>
+              </div>
+            </div>
+          </div>
+          {% else %}
+          <p class="text-muted">Hotel recommendations coming soon for this destination.</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="card-elevated p-4 mb-4">
+          <h5 class="mb-3">Destination Facts</h5>
+          <table class="table table-borderless mb-0">
+            <tr><th><i class="fa-solid fa-plane-arrival me-1"></i>Airport</th><td>{{ destination.airport_name }} ({{ destination.airport_code }})</td></tr>
+            <tr><th><i class="fa-solid fa-clock me-1"></i>Flight Duration</th><td>{{ destination.flight_duration }}</td></tr>
+            <tr><th><i class="fa-solid fa-cloud-sun me-1"></i>Weather</th><td>{{ destination.weather }}</td></tr>
+            <tr><th><i class="fa-solid fa-calendar-check me-1"></i>Best Season</th><td>{{ destination.best_season }}</td></tr>
+            <tr><th><i class="fa-solid fa-passport me-1"></i>Visa Required</th><td>{{ "Yes" if destination.visa_required else "No (Visa-Free)" }}</td></tr>
+            <tr><th><i class="fa-solid fa-tag me-1"></i>Starting Price</th><td class="fw-bold text-brand">PKR {{ "{:,.0f}".format(destination.starting_price) }}</td></tr>
+          </table>
+          <a href="{{ url_for('booking.search', q=destination.city) }}" class="btn btn-brand w-100 mt-3"><i class="fa-solid fa-plane-departure me-2"></i>Book This Destination</a>
+        </div>
+
+        <div class="card-elevated p-4">
+          <h6 class="mb-3">Top Airlines to {{ destination.city }}</h6>
+          {% for a in airlines %}
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <img src="{{ url_for('static', filename='images/' ~ a.logo) }}" style="height:30px;">
+            <span class="small">{{ a.name }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    {% if related %}
+    <h4 class="mt-5 mb-4">You Might Also Like</h4>
+    <div class="row g-4">
+      {% for d in related %}
+      <div class="col-lg-3 col-md-6">
+        <a href="{{ url_for('public.destination_detail', destination_id=d.id) }}" class="text-decoration-none text-dark">
+          <div class="card card-elevated destination-card h-100">
+            <span class="price-badge">PKR {{ "{:,.0f}".format(d.starting_price) }}</span>
+            <img src="{{ url_for('static', filename='images/' ~ d.image) }}" class="card-img-top-fixed" alt="{{ d.city }}">
+            <div class="card-body"><h6 class="fw-bold mb-0">{{ d.city }}</h6><p class="text-muted small mb-0">{{ d.country }}</p></div>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

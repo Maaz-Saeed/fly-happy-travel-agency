@@ -1,0 +1,96 @@
+{% extends "admin/_base.html" %}
+{% block title %}Destinations{% endblock %}
+{% block page_title %}Manage Destinations{% endblock %}
+{% block content %}
+<div class="admin-table-card">
+  <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <form method="GET" class="d-flex gap-2">
+      <input type="text" name="q" value="{{ search }}" class="form-control" placeholder="Search city or country...">
+      <button class="btn btn-outline-brand">Search</button>
+    </form>
+    <button class="btn btn-brand" data-bs-toggle="modal" data-bs-target="#addDestinationModal"><i class="fa-solid fa-plus me-1"></i>Add Destination</button>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-brand align-middle">
+      <thead><tr><th>City</th><th>Country</th><th>Airport</th><th>Region</th><th>Price</th><th>Visa</th><th>Popular</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for d in destinations %}
+        <tr>
+          <td>{{ d.city }}</td><td>{{ d.country }}</td><td>{{ d.airport_code }}</td><td>{{ d.region }}</td>
+          <td>PKR {{ "{:,.0f}".format(d.starting_price) }}</td>
+          <td>{{ "Yes" if d.visa_required else "No" }}</td>
+          <td>{{ "★" if d.is_popular else "-" }}</td>
+          <td class="d-flex gap-1">
+            <button class="btn btn-sm btn-outline-brand" data-bs-toggle="modal" data-bs-target="#editDestination{{ d.id }}"><i class="fa-solid fa-pen"></i></button>
+            <form method="POST" action="{{ url_for('admin.delete_destination', item_id=d.id) }}" onsubmit="return confirm('Delete this destination?');">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="8" class="text-center text-muted py-4">No destinations found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% for d in destinations %}
+<div class="modal fade" id="editDestination{{ d.id }}" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form method="POST" action="{{ url_for('admin.edit_destination', item_id=d.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="modal-header"><h5 class="modal-title">Edit {{ d.city }}</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-6"><label class="form-label">City</label><input name="city" value="{{ d.city }}" class="form-control" required></div>
+            <div class="col-md-6"><label class="form-label">Country</label><input name="country" value="{{ d.country }}" class="form-control" required></div>
+            <div class="col-md-6"><label class="form-label">Airport Name</label><input name="airport_name" value="{{ d.airport_name or '' }}" class="form-control"></div>
+            <div class="col-md-3"><label class="form-label">Airport Code</label><input name="airport_code" value="{{ d.airport_code or '' }}" class="form-control"></div>
+            <div class="col-md-3"><label class="form-label">Region</label><input name="region" value="{{ d.region or '' }}" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label">Starting Price (PKR)</label><input type="number" step="0.01" name="starting_price" value="{{ d.starting_price }}" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label">Flight Duration</label><input name="flight_duration" value="{{ d.flight_duration or '' }}" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label">Best Season</label><input name="best_season" value="{{ d.best_season or '' }}" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label">Weather</label><input name="weather" value="{{ d.weather or '' }}" class="form-control"></div>
+            <div class="col-md-3 d-flex align-items-end"><div class="form-check"><input type="checkbox" class="form-check-input" name="visa_required" {% if d.visa_required %}checked{% endif %}><label class="form-check-label">Visa Required</label></div></div>
+            <div class="col-md-3 d-flex align-items-end"><div class="form-check"><input type="checkbox" class="form-check-input" name="is_popular" {% if d.is_popular %}checked{% endif %}><label class="form-check-label">Popular</label></div></div>
+            <div class="col-12"><label class="form-label">Description</label><textarea name="description" class="form-control" rows="3">{{ d.description or '' }}</textarea></div>
+          </div>
+        </div>
+        <div class="modal-footer"><button type="submit" class="btn btn-brand">Save Changes</button></div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+<div class="modal fade" id="addDestinationModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="modal-header"><h5 class="modal-title">Add Destination</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-6"><label class="form-label">City</label><input name="city" class="form-control" required></div>
+            <div class="col-md-6"><label class="form-label">Country</label><input name="country" class="form-control" required></div>
+            <div class="col-md-6"><label class="form-label">Airport Name</label><input name="airport_name" class="form-control"></div>
+            <div class="col-md-3"><label class="form-label">Airport Code</label><input name="airport_code" class="form-control"></div>
+            <div class="col-md-3"><label class="form-label">Region</label><input name="region" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label">Starting Price (PKR)</label><input type="number" step="0.01" name="starting_price" class="form-control" required></div>
+            <div class="col-md-4"><label class="form-label">Flight Duration</label><input name="flight_duration" class="form-control" placeholder="e.g. 3h 30m"></div>
+            <div class="col-md-4"><label class="form-label">Best Season</label><input name="best_season" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label">Weather</label><input name="weather" class="form-control"></div>
+            <div class="col-md-3 d-flex align-items-end"><div class="form-check"><input type="checkbox" class="form-check-input" name="visa_required" checked><label class="form-check-label">Visa Required</label></div></div>
+            <div class="col-md-3 d-flex align-items-end"><div class="form-check"><input type="checkbox" class="form-check-input" name="is_popular"><label class="form-check-label">Popular</label></div></div>
+            <div class="col-12"><label class="form-label">Description</label><textarea name="description" class="form-control" rows="3"></textarea></div>
+          </div>
+        </div>
+        <div class="modal-footer"><button type="submit" class="btn btn-brand">Add Destination</button></div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

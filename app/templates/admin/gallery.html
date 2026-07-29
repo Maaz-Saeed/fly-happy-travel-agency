@@ -1,0 +1,45 @@
+{% extends "admin/_base.html" %}
+{% block title %}Gallery{% endblock %}
+{% block page_title %}Manage Gallery{% endblock %}
+{% block content %}
+<div class="admin-table-card">
+  <div class="d-flex justify-content-end mb-3">
+    <button class="btn btn-brand" data-bs-toggle="modal" data-bs-target="#addGalleryModal"><i class="fa-solid fa-plus me-1"></i>Add Image</button>
+  </div>
+  <div class="row g-3">
+    {% for g in items %}
+    <div class="col-md-3 col-6">
+      <div class="card-elevated p-2">
+        <img src="{{ url_for('static', filename='images/' ~ g.image) }}" class="rounded mb-2" style="height:140px;width:100%;object-fit:cover;">
+        <p class="small mb-1 fw-semibold">{{ g.caption }}</p>
+        <p class="small text-muted mb-2">{{ g.category }}</p>
+        <form method="POST" action="{{ url_for('admin.delete_gallery', item_id=g.id) }}" onsubmit="return confirm('Delete this image?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="btn btn-sm btn-outline-danger w-100"><i class="fa-solid fa-trash"></i> Remove</button>
+        </form>
+      </div>
+    </div>
+    {% else %}
+    <p class="text-muted text-center py-4">No gallery images yet.</p>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="modal fade" id="addGalleryModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="modal-header"><h5 class="modal-title">Add Gallery Image</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+          <div class="mb-3"><label class="form-label">Image Path</label><input name="image" class="form-control" placeholder="gallery/gallery13.jpg" required>
+            <small class="text-muted">Path relative to static/images/ — upload the file to that folder first.</small></div>
+          <div class="mb-3"><label class="form-label">Caption</label><input name="caption" class="form-control"></div>
+          <div class="mb-3"><label class="form-label">Category</label><input name="category" class="form-control" value="General"></div>
+        </div>
+        <div class="modal-footer"><button type="submit" class="btn btn-brand">Add Image</button></div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

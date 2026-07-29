@@ -1,0 +1,71 @@
+{% extends "admin/_base.html" %}
+{% block title %}Reports{% endblock %}
+{% block page_title %}Sales &amp; Analytics Reports{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-end mb-3 no-print">
+  <button class="btn btn-outline-brand btn-print"><i class="fa-solid fa-print me-2"></i>Print Report</button>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="admin-stat-card"><div class="admin-stat-icon" style="background:var(--brand);"><i class="fa-solid fa-coins"></i></div>
+      <div><h3>PKR {{ "{:,.0f}".format(daily_revenue) }}</h3><small>Daily Revenue</small></div></div>
+  </div>
+  <div class="col-md-4">
+    <div class="admin-stat-card"><div class="admin-stat-icon" style="background:var(--brand-dark);"><i class="fa-solid fa-money-bill-trend-up"></i></div>
+      <div><h3>PKR {{ "{:,.0f}".format(monthly_revenue) }}</h3><small>Monthly Revenue</small></div></div>
+  </div>
+  <div class="col-md-4">
+    <div class="admin-stat-card"><div class="admin-stat-icon" style="background:var(--gold-dark);"><i class="fa-solid fa-sack-dollar"></i></div>
+      <div><h3>PKR {{ "{:,.0f}".format(yearly_revenue) }}</h3><small>Yearly Revenue</small></div></div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-4">
+    <div class="admin-table-card">
+      <h6 class="mb-3">Most Popular Destinations</h6>
+      <table class="table table-sm">
+        <thead><tr><th>Destination</th><th>Bookings</th></tr></thead>
+        <tbody>
+          {% for city, country, cnt in top_destinations %}
+          <tr><td>{{ city }}, {{ country }}</td><td>{{ cnt }}</td></tr>
+          {% else %}
+          <tr><td colspan="2" class="text-muted text-center">No data yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="admin-table-card">
+      <h6 class="mb-3">Most Booked Airlines</h6>
+      <table class="table table-sm">
+        <thead><tr><th>Airline</th><th>Bookings</th></tr></thead>
+        <tbody>
+          {% for name, cnt in top_airlines %}
+          <tr><td>{{ name }}</td><td>{{ cnt }}</td></tr>
+          {% else %}
+          <tr><td colspan="2" class="text-muted text-center">No data yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="admin-table-card">
+      <h6 class="mb-3">Most Valuable Customers</h6>
+      <table class="table table-sm">
+        <thead><tr><th>Customer</th><th>Total Spend</th></tr></thead>
+        <tbody>
+          {% for name, total in top_customers %}
+          <tr><td>{{ name }}</td><td>PKR {{ "{:,.0f}".format(total) }}</td></tr>
+          {% else %}
+          <tr><td colspan="2" class="text-muted text-center">No data yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

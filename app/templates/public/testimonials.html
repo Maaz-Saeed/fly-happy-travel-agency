@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Testimonials{% endblock %}
+{% block content %}
+<div class="page-header-banner">
+  <div class="container">
+    <h1 data-aos="fade-up">Customer Testimonials</h1>
+    <p class="breadcrumb-custom"><a href="{{ url_for('public.home') }}">Home</a> / <span class="current">Testimonials</span></p>
+  </div>
+</div>
+<section class="section-pad">
+  <div class="container">
+    <div class="row g-4">
+      {% for t in testimonials %}
+      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ (loop.index0 % 6) * 40 }}">
+        <div class="testimonial-card h-100">
+          <i class="fa-solid fa-quote-right quote-icon"></i>
+          <div class="rating-stars mb-2">{% for i in range(t.rating) %}<i class="fa-solid fa-star"></i>{% endfor %}</div>
+          <p class="text-muted">"{{ t.message }}"</p>
+          <div class="d-flex align-items-center gap-2 mt-3">
+            <img src="{{ url_for('static', filename='images/' ~ t.photo) }}" class="testimonial-avatar" alt="{{ t.customer_name }}">
+            <div><h6 class="mb-0">{{ t.customer_name }}</h6><small class="text-muted">{{ t.destination }}</small></div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

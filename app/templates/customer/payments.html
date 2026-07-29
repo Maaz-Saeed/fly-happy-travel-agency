@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Payment History{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-2 p-0">{% include "customer/_sidebar.html" %}</div>
+    <div class="col-lg-10 py-5 px-4 px-md-5">
+      <h3 class="mb-4">Payment History</h3>
+      <div class="card-elevated p-4">
+        <div class="table-responsive">
+          <table class="table table-brand align-middle">
+            <thead><tr><th>Receipt No.</th><th>Booking ID</th><th>Method</th><th>Transaction ID</th><th>Amount</th><th>Status</th><th>Date</th><th></th></tr></thead>
+            <tbody>
+              {% for p in payments %}
+              <tr>
+                <td>{{ p.receipt_number }}</td>
+                <td>{{ p.booking.booking_id }}</td>
+                <td>{{ p.method }}</td>
+                <td>{{ p.transaction_id }}</td>
+                <td>PKR {{ "{:,.0f}".format(p.amount) }}</td>
+                <td><span class="badge badge-status-{{ p.status }}">{{ p.status|capitalize }}</span></td>
+                <td>{{ p.paid_at.strftime('%d %b %Y') }}</td>
+                <td><a href="{{ url_for('payment.receipt', payment_id=p.id) }}" class="btn btn-sm btn-outline-brand">Receipt</a></td>
+              </tr>
+              {% else %}
+              <tr><td colspan="8" class="text-center text-muted py-4">No payments recorded yet.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

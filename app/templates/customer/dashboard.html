@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}My Dashboard{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-2 p-0">{% include "customer/_sidebar.html" %}</div>
+    <div class="col-lg-10 py-5 px-4 px-md-5">
+      <h3 class="mb-4">Welcome back, {{ current_user.full_name.split(' ')[0] }}!</h3>
+
+      <div class="row g-4 mb-4">
+        <div class="col-md-3 col-6">
+          <div class="stat-tile" style="background:linear-gradient(135deg,#147a49,#0d4f31);">
+            <i class="fa-solid fa-ticket stat-tile-icon"></i>
+            <h3>{{ stats.total_bookings }}</h3><small>Total Bookings</small>
+          </div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="stat-tile" style="background:linear-gradient(135deg,#2ea86b,#147a49);">
+            <i class="fa-solid fa-circle-check stat-tile-icon"></i>
+            <h3>{{ stats.confirmed }}</h3><small>Confirmed</small>
+          </div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="stat-tile" style="background:linear-gradient(135deg,#d4af37,#b8952e);">
+            <i class="fa-solid fa-clock stat-tile-icon"></i>
+            <h3>{{ stats.pending }}</h3><small>Pending Payment</small>
+          </div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="stat-tile" style="background:linear-gradient(135deg,#6c757d,#495057);">
+            <i class="fa-solid fa-ban stat-tile-icon"></i>
+            <h3>{{ stats.cancelled }}</h3><small>Cancelled</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-elevated p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="mb-0">Recent Bookings</h5>
+          <a href="{{ url_for('customer.bookings') }}" class="btn btn-sm btn-outline-brand">View All</a>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-brand align-middle">
+            <thead><tr><th>Booking ID</th><th>Destination</th><th>Airline</th><th>Departure</th><th>Total</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+              {% for b in bookings %}
+              <tr>
+                <td>{{ b.booking_id }}</td>
+                <td>{{ b.destination.city }}</td>
+                <td>{{ b.airline.name }}</td>
+                <td>{{ b.departure_date.strftime('%d %b %Y') }}</td>
+                <td>PKR {{ "{:,.0f}".format(b.total_price) }}</td>
+                <td><span class="badge badge-status-{{ b.status }}">{{ b.status|capitalize }}</span></td>
+                <td><a href="{{ url_for('booking.confirmation', booking_id=b.id) }}" class="btn btn-sm btn-outline-brand">View</a></td>
+              </tr>
+              {% else %}
+              <tr><td colspan="7" class="text-center text-muted py-4">No bookings yet. <a href="{{ url_for('booking.search') }}">Book your first trip!</a></td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

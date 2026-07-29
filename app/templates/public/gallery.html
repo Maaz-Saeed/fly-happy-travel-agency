@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Gallery{% endblock %}
+{% block content %}
+<div class="page-header-banner">
+  <div class="container">
+    <h1 data-aos="fade-up">Travel Gallery</h1>
+    <p class="breadcrumb-custom"><a href="{{ url_for('public.home') }}">Home</a> / <span class="current">Gallery</span></p>
+  </div>
+</div>
+<section class="section-pad">
+  <div class="container">
+    <div class="d-flex flex-wrap gap-2 justify-content-center mb-4" data-aos="fade-up">
+      <a href="{{ url_for('public.gallery') }}" class="btn btn-sm {{ 'btn-brand' if not category else 'btn-outline-brand' }}">All</a>
+      {% for c in categories %}
+      <a href="{{ url_for('public.gallery', category=c) }}" class="btn btn-sm {{ 'btn-brand' if category == c else 'btn-outline-brand' }}">{{ c }}</a>
+      {% endfor %}
+    </div>
+    <div class="row g-3">
+      {% for g in items %}
+      <div class="col-lg-3 col-md-4 col-6" data-aos="zoom-in" data-aos-delay="{{ (loop.index0 % 8) * 30 }}">
+        <div class="gallery-item">
+          <img src="{{ url_for('static', filename='images/' ~ g.image) }}" alt="{{ g.caption }}">
+          <div class="gallery-caption small">{{ g.caption }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

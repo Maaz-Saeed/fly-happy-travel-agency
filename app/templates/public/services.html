@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Our Services{% endblock %}
+{% block content %}
+<div class="page-header-banner">
+  <div class="container">
+    <h1 data-aos="fade-up">Our Services</h1>
+    <p class="breadcrumb-custom"><a href="{{ url_for('public.home') }}">Home</a> / <span class="current">Services</span></p>
+  </div>
+</div>
+
+<section class="section-pad">
+  <div class="container">
+    <div class="text-center section-title" data-aos="fade-up">
+      <span class="section-eyebrow">Complete Travel Solutions</span>
+      <h2>Everything You Need, Under One Roof</h2>
+      <p class="text-muted">From ticketing to visas to unforgettable holiday experiences</p>
+    </div>
+    <div class="row g-4">
+      {% set services = [
+        ('fa-plane','International Air Ticket Booking','Best fares on international flights across 40+ partner airlines worldwide.'),
+        ('fa-plane-departure','Domestic Air Ticket Booking','Quick and affordable domestic flight bookings across Pakistan.'),
+        ('fa-passport','Visa Processing','End-to-end visa application support for all major destinations.'),
+        ('fa-earth-asia','Visit Visa','Tourist and family visit visa assistance with document verification.'),
+        ('fa-briefcase','Work Visa','Employment visa processing and job-offer documentation support.'),
+        ('fa-graduation-cap','Student Visa','Guidance for university admissions and student visa applications.'),
+        ('fa-building','Business Visa','Fast-track business visa processing for corporate travelers.'),
+        ('fa-kaaba','Umrah Packages','Fully guided Umrah packages with premium hotels near Haramain.'),
+        ('fa-mosque','Hajj Packages','Government-approved Hajj packages with complete logistical support.'),
+        ('fa-umbrella-beach','Holiday Packages','Custom-tailored vacation packages for couples, friends and solo travelers.'),
+        ('fa-people-roof','Family Tours','Kid-friendly itineraries and family-focused holiday planning.'),
+        ('fa-handshake','Corporate Tours','Managed business travel and incentive tour packages for companies.'),
+        ('fa-users-rectangle','Group Tours','Discounted group travel packages for 10+ travelers.'),
+        ('fa-hotel','Hotel Booking','Access to thousands of hotels worldwide at negotiated rates.'),
+        ('fa-car','Car Rental','Rental car booking at your destination for full travel flexibility.'),
+        ('fa-taxi','Airport Pickup','Reliable airport pickup and drop-off transport arrangements.'),
+        ('fa-shield-halved','Travel Insurance','Comprehensive medical and trip protection insurance plans.'),
+        ('fa-id-card','Passport Assistance','New passport and renewal application support and tracking.'),
+        ('fa-file-circle-check','Document Verification','Attestation and verification services for travel documents.'),
+        ('fa-money-bill-transfer','Foreign Exchange Guidance','Expert advice on currency exchange for your destination.'),
+        ('fa-headset','24/7 Customer Support','Round-the-clock assistance before, during and after your trip.'),
+        ('fa-chart-line','Corporate Travel Management','Dedicated account management for company-wide travel needs.'),
+        ('fa-bolt','Emergency Ticket Booking','Last-minute and emergency flight booking assistance.'),
+        ('fa-ship','Cruise Booking','Curated cruise packages to the most scenic waters in the world.'),
+        ('fa-train','Train Ticket Booking','Domestic and international rail ticket reservation services.'),
+        ('fa-bus','Bus Ticket Booking','Comfortable intercity and cross-border bus ticket bookings.'),
+      ] %}
+      {% for icon, title, desc in services %}
+      <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="{{ (loop.index0 % 8) * 40 }}">
+        <div class="card-elevated p-4 h-100">
+          <div class="service-icon-box"><i class="fa-solid {{ icon }}"></i></div>
+          <h6 class="fw-bold">{{ title }}</h6>
+          <p class="text-muted small mb-0">{{ desc }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="text-center mt-5" data-aos="fade-up">
+      <a href="{{ url_for('public.contact') }}" class="btn btn-brand btn-lg">Get a Free Consultation</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

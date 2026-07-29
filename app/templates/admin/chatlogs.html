@@ -1,0 +1,24 @@
+{% extends "admin/_base.html" %}
+{% block title %}Chatbot Logs{% endblock %}
+{% block page_title %}Chatbot Conversation Logs{% endblock %}
+{% block content %}
+<div class="admin-table-card">
+  <div class="table-responsive">
+    <table class="table table-brand align-middle">
+      <thead><tr><th>Session</th><th>User Message</th><th>Bot Response</th><th>Date</th></tr></thead>
+      <tbody>
+        {% for log in logs %}
+        <tr>
+          <td><code>{{ log.session_id[:8] }}</code></td>
+          <td>{{ log.user_message }}</td>
+          <td>{{ log.bot_response }}</td>
+          <td>{{ log.created_at.strftime('%d %b %Y, %H:%M') }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4" class="text-center text-muted py-4">No chatbot conversations logged yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

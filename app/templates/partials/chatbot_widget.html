@@ -1,0 +1,32 @@
+<div id="chatbot-widget">
+  <button id="chatbot-toggle" class="chatbot-toggle" aria-label="Open chat assistant">
+    <i class="fa-solid fa-comments"></i>
+    <span class="chatbot-badge">1</span>
+  </button>
+
+  <div id="chatbot-window" class="chatbot-window d-none">
+    <div class="chatbot-header">
+      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo">
+      <div>
+        <strong>Fly Happy Assistant</strong>
+        <div class="chatbot-status"><span class="dot"></span> Online</div>
+      </div>
+      <button id="chatbot-close" class="btn-close btn-close-white ms-auto"></button>
+    </div>
+    <div id="chatbot-messages" class="chatbot-messages">
+      <div class="msg bot">
+        Hi! I'm the Fly Happy virtual assistant. Ask me about bookings, visas, packages, payments or office hours.
+      </div>
+    </div>
+    <div class="chatbot-quick-replies">
+      <button type="button" class="quick-reply">Office timings</button>
+      <button type="button" class="quick-reply">Visa process</button>
+      <button type="button" class="quick-reply">Refund policy</button>
+      <button type="button" class="quick-reply">Payment methods</button>
+    </div>
+    <form id="chatbot-form" class="chatbot-input">
+      <input type="text" id="chatbot-input" placeholder="Type your message..." autocomplete="off" required>
+      <button type="submit"><i class="fa-solid fa-paper-plane"></i></button>
+    </form>
+  </div>
+</div>

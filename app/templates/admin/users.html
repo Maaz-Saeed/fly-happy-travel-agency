@@ -1,0 +1,30 @@
+{% extends "admin/_base.html" %}
+{% block title %}All Users{% endblock %}
+{% block page_title %}Manage All Users{% endblock %}
+{% block content %}
+<div class="admin-table-card">
+  <div class="d-flex flex-wrap gap-2 mb-3">
+    <a href="{{ url_for('admin.users') }}" class="btn btn-sm {{ 'btn-brand' if not role else 'btn-outline-brand' }}">All</a>
+    {% for r in ['admin','employee','customer'] %}
+    <a href="{{ url_for('admin.users', role=r) }}" class="btn btn-sm {{ 'btn-brand' if role == r else 'btn-outline-brand' }}">{{ r|capitalize }}s</a>
+    {% endfor %}
+  </div>
+  <div class="table-responsive">
+    <table class="table table-brand align-middle">
+      <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Role</th><th>Phone</th><th>Joined</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for u in users %}
+        <tr>
+          <td>{{ loop.index }}</td><td>{{ u.full_name }}</td><td>{{ u.email }}</td>
+          <td><span class="badge bg-brand text-uppercase">{{ u.role }}</span></td>
+          <td>{{ u.phone }}</td><td>{{ u.created_at.strftime('%d %b %Y') }}</td>
+          <td>{% if u.is_active_account %}<span class="badge bg-success">Active</span>{% else %}<span class="badge bg-secondary">Inactive</span>{% endif %}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" class="text-center text-muted py-4">No users found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

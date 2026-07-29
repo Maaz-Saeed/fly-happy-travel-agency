@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Invoice{% endblock %}
+{% block content %}
+<section class="section-pad">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-9">
+        <div class="invoice-box" id="printable-area">
+          <div class="invoice-header">
+            <div class="d-flex align-items-center gap-2">
+              <img src="{{ url_for('static', filename='images/logo.png') }}" style="height:60px;">
+              <div>
+                <h5 class="mb-0">{{ company_name }}</h5>
+                <small class="text-muted">{{ company_address }}</small><br>
+                <small class="text-muted">License No. {{ company_license }} | {{ company_phone }} | {{ company_email }}</small>
+              </div>
+            </div>
+            <div class="text-end">
+              <h4 class="text-brand mb-0">INVOICE</h4>
+              <small class="text-muted">{{ booking.booking_id }}</small><br>
+              <small class="text-muted">{{ booking.created_at.strftime('%d %b %Y') }}</small>
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <h6 class="text-muted text-uppercase small">Billed To</h6>
+              <p class="mb-0"><strong>{{ booking.passenger_name }}</strong></p>
+              <p class="mb-0">{{ booking.email }}</p>
+              <p class="mb-0">{{ booking.phone }}</p>
+              <p class="mb-0">Passport: {{ booking.passport_number }} | CNIC: {{ booking.cnic }}</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+              <h6 class="text-muted text-uppercase small">Booking Status</h6>
+              <span class="badge badge-status-{{ booking.status }} fs-6">{{ booking.status|capitalize }}</span>
+            </div>
+          </div>
+
+          <table class="table table-bordered table-brand">
+            <thead>
+              <tr>
+                <th>Description</th><th>Trip Type</th><th>Class</th><th>Passengers</th><th class="text-end">Amount (PKR)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <strong>{{ booking.airline.name }}</strong> to {{ booking.destination.city }}, {{ booking.destination.country }}<br>
+                  <small class="text-muted">Ticket No: {{ booking.ticket_number }} | Departure: {{ booking.departure_date.strftime('%d %b %Y') }}
+                  {% if booking.return_date %} | Return: {{ booking.return_date.strftime('%d %b %Y') }}{% endif %}</small>
+                </td>
+                <td>{{ "Round Trip" if booking.trip_type == "round_trip" else "One Way" }}</td>
+                <td>{{ booking.seat_class }}</td>
+                <td>{{ booking.adults }}A, {{ booking.children }}C, {{ booking.infants }}I</td>
+                <td class="text-end">{{ "{:,.2f}".format(booking.total_price) }}</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr><th colspan="4" class="text-end">Total</th><th class="text-end">PKR {{ "{:,.2f}".format(booking.total_price) }}</th></tr>
+            </tfoot>
+          </table>
+
+          {% if payments %}
+          <h6 class="mt-4">Payment History</h6>
+          <table class="table table-sm table-bordered">
+            <thead><tr><th>Receipt No.</th><th>Method</th><th>Transaction ID</th><th>Status</th><th class="text-end">Amount</th><th>Date</th></tr></thead>
+            <tbody>
+              {% for p in payments %}
+              <tr>
+                <td>{{ p.receipt_number }}</td><td>{{ p.method }}</td><td>{{ p.transaction_id }}</td>
+                <td><span class="badge badge-status-{{ p.status }}">{{ p.status|capitalize }}</span></td>
+                <td class="text-end">{{ "{:,.2f}".format(p.amount) }}</td>
+                <td>{{ p.paid_at.strftime('%d %b %Y') }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% endif %}
+
+          <p class="text-center text-muted small mt-4 mb-0">This invoice was generated automatically by the {{ company_short_name }} booking system. Thank you for your business!</p>
+        </div>
+
+        <div class="d-flex justify-content-center gap-3 mt-4">
+          <button class="btn btn-brand btn-print"><i class="fa-solid fa-print me-2"></i>Print Invoice</button>
+          <a href="{{ url_for('customer.dashboard') }}" class="btn btn-outline-brand">Back to Dashboard</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

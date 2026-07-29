@@ -1,0 +1,142 @@
+{% extends "admin/_base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard Overview{% endblock %}
+{% block content %}
+<div class="row g-3 mb-4">
+  <div class="col-xl-3 col-md-6">
+    <div class="admin-stat-card">
+      <div class="admin-stat-icon" style="background:var(--brand);"><i class="fa-solid fa-calendar-day"></i></div>
+      <div><h3>{{ todays_bookings }}</h3><small>Today's Bookings</small></div>
+    </div>
+  </div>
+  <div class="col-xl-3 col-md-6">
+    <div class="admin-stat-card">
+      <div class="admin-stat-icon" style="background:var(--brand-dark);"><i class="fa-solid fa-calendar-check"></i></div>
+      <div><h3>{{ monthly_bookings }}</h3><small>Monthly Bookings</small></div>
+    </div>
+  </div>
+  <div class="col-xl-3 col-md-6">
+    <div class="admin-stat-card">
+      <div class="admin-stat-icon" style="background:#2ea86b;"><i class="fa-solid fa-users"></i></div>
+      <div><h3>{{ total_customers }}</h3><small>Total Customers</small></div>
+    </div>
+  </div>
+  <div class="col-xl-3 col-md-6">
+    <div class="admin-stat-card">
+      <div class="admin-stat-icon" style="background:var(--gold-dark);"><i class="fa-solid fa-sack-dollar"></i></div>
+      <div><h3>PKR {{ "{:,.0f}".format(total_revenue) }}</h3><small>Total Revenue</small></div>
+    </div>
+  </div>
+  <div class="col-xl-3 col-md-6">
+    <div class="admin-stat-card">
+      <div class="admin-stat-icon" style="background:#f0ad4e;"><i class="fa-solid fa-hourglass-half"></i></div>
+      <div><h3>{{ pending_payments }}</h3><small>Pending Payments</small></div>
+    </div>
+  </div>
+  <div class="col-xl-3 col-md-6">
+    <div class="admin-stat-card">
+      <div class="admin-stat-icon" style="background:#dc3545;"><i class="fa-solid fa-ban"></i></div>
+      <div><h3>{{ cancelled_bookings }}</h3><small>Cancelled Bookings</small></div>
+    </div>
+  </div>
+  <div class="col-xl-3 col-md-6">
+    <div class="admin-stat-card">
+      <div class="admin-stat-icon" style="background:#0d6efd;"><i class="fa-solid fa-plane-departure"></i></div>
+      <div><h3>{{ upcoming_flights }}</h3><small>Upcoming Flights</small></div>
+    </div>
+  </div>
+  <div class="col-xl-3 col-md-6">
+    <div class="admin-stat-card">
+      <div class="admin-stat-icon" style="background:#6c757d;"><i class="fa-solid fa-star"></i></div>
+      <div><h3 style="font-size:1.1rem;">{{ popular_destination }}</h3><small>Most Popular Destination</small></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="admin-stat-card">
+      <div class="admin-stat-icon" style="background:var(--brand);"><i class="fa-solid fa-plane"></i></div>
+      <div><h3 style="font-size:1.1rem;">{{ popular_airline }}</h3><small>Most Booked Airline</small></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="chart-card">
+      <h6 class="mb-3">Revenue (Last 6 Months)</h6>
+      <canvas id="revenueChart" height="220"></canvas>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="chart-card">
+      <h6 class="mb-3">Bookings (Last 6 Months)</h6>
+      <canvas id="bookingChart" height="220"></canvas>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="chart-card">
+      <h6 class="mb-3">Customer Growth (Last 6 Months)</h6>
+      <canvas id="customerChart" height="220"></canvas>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="admin-table-card">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="mb-0">Recent Bookings</h6>
+        <a href="{{ url_for('admin.bookings') }}" class="btn btn-sm btn-outline-brand">View All</a>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-sm table-brand">
+          <thead><tr><th>Booking ID</th><th>Customer</th><th>Destination</th><th>Status</th></tr></thead>
+          <tbody>
+            {% for b in recent_bookings %}
+            <tr>
+              <td><a href="{{ url_for('admin.booking_detail', booking_id=b.id) }}">{{ b.booking_id }}</a></td>
+              <td>{{ b.passenger_name }}</td>
+              <td>{{ b.destination.city }}</td>
+              <td><span class="badge badge-status-{{ b.status }}">{{ b.status|capitalize }}</span></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const revenueCtx = document.getElementById('revenueChart');
+new Chart(revenueCtx, {
+  type: 'line',
+  data: {
+    labels: {{ revenue_labels|tojson }},
+    datasets: [{ label: 'Revenue (PKR)', data: {{ revenue_data|tojson }}, borderColor: '#147a49', backgroundColor: 'rgba(20,122,73,0.15)', fill: true, tension: 0.35 }]
+  },
+  options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+});
+
+const bookingCtx = document.getElementById('bookingChart');
+new Chart(bookingCtx, {
+  type: 'bar',
+  data: {
+    labels: {{ booking_labels|tojson }},
+    datasets: [{ label: 'Bookings', data: {{ booking_data|tojson }}, backgroundColor: '#d4af37', borderRadius: 6 }]
+  },
+  options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+});
+
+const customerCtx = document.getElementById('customerChart');
+new Chart(customerCtx, {
+  type: 'line',
+  data: {
+    labels: {{ cust_labels|tojson }},
+    datasets: [{ label: 'New Customers', data: {{ cust_data|tojson }}, borderColor: '#0d4f31', backgroundColor: 'rgba(13,79,49,0.15)', fill: true, tension: 0.35 }]
+  },
+  options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block title %}Book {{ destination.city }}{% endblock %}
+{% block content %}
+<div class="page-header-banner">
+  <div class="container">
+    <h1 data-aos="fade-up">Book Your Trip to {{ destination.city }}</h1>
+    <p class="breadcrumb-custom"><a href="{{ url_for('public.home') }}">Home</a> / <a href="{{ url_for('booking.search') }}">Book Now</a> / <span class="current">{{ destination.city }}</span></p>
+  </div>
+</div>
+
+<section class="section-pad">
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-8">
+        <div class="card-elevated p-4 p-md-5">
+          <form method="POST" id="booking-form" data-base-price="{{ destination.starting_price }}" novalidate>
+            {{ form.hidden_tag() }}
+            {{ form.destination_id(style="display:none;") }}
+
+            <h5 class="mb-3"><i class="fa-solid fa-route text-brand me-2"></i>Trip Details</h5>
+            <div class="mb-3 d-flex gap-4">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="trip_type" id="oneWay" value="one_way" {% if form.trip_type.data == 'one_way' %}checked{% endif %}>
+                <label class="form-check-label" for="oneWay">One Way</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="trip_type" id="roundTrip" value="round_trip" {% if form.trip_type.data != 'one_way' %}checked{% endif %}>
+                <label class="form-check-label" for="roundTrip">Round Trip</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                {{ form.airline_id.label(class="form-label fw-semibold") }}
+                {{ form.airline_id(class="form-select") }}
+              </div>
+              <div class="col-md-6 mb-3">
+                {{ form.seat_class.label(class="form-label fw-semibold") }}
+                {{ form.seat_class(class="form-select") }}
+              </div>
+              <div class="col-md-6 mb-3">
+                {{ form.departure_date.label(class="form-label fw-semibold") }}
+                {{ form.departure_date(class="form-control") }}
+                {% for e in form.departure_date.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+              </div>
+              <div class="col-md-6 mb-3" id="return-date-wrap">
+                {{ form.return_date.label(class="form-label fw-semibold") }}
+                {{ form.return_date(class="form-control") }}
+              </div>
+              <div class="col-md-4 mb-3">
+                {{ form.adults.label(class="form-label fw-semibold") }}
+                {{ form.adults(class="form-control") }}
+              </div>
+              <div class="col-md-4 mb-3">
+                {{ form.children.label(class="form-label fw-semibold") }}
+                {{ form.children(class="form-control") }}
+              </div>
+              <div class="col-md-4 mb-3">
+                {{ form.infants.label(class="form-label fw-semibold") }}
+                {{ form.infants(class="form-control") }}
+              </div>
+              <div class="col-md-6 mb-3">
+                {{ form.meal_preference.label(class="form-label fw-semibold") }}
+                {{ form.meal_preference(class="form-select") }}
+              </div>
+            </div>
+
+            <h5 class="mb-3 mt-4"><i class="fa-solid fa-id-card text-brand me-2"></i>Passenger Details</h5>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                {{ form.passenger_name.label(class="form-label fw-semibold") }}
+                {{ form.passenger_name(class="form-control") }}
+                {% for e in form.passenger_name.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+              </div>
+              <div class="col-md-6 mb-3">
+                {{ form.passport_number.label(class="form-label fw-semibold") }}
+                {{ form.passport_number(class="form-control") }}
+                {% for e in form.passport_number.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+              </div>
+              <div class="col-md-6 mb-3">
+                {{ form.cnic.label(class="form-label fw-semibold") }}
+                {{ form.cnic(class="form-control") }}
+                {% for e in form.cnic.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+              </div>
+              <div class="col-md-6 mb-3">
+                {{ form.phone.label(class="form-label fw-semibold") }}
+                {{ form.phone(class="form-control") }}
+                {% for e in form.phone.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+              </div>
+              <div class="col-md-6 mb-3">
+                {{ form.email.label(class="form-label fw-semibold") }}
+                {{ form.email(class="form-control") }}
+                {% for e in form.email.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+              </div>
+              <div class="col-12 mb-3">
+                {{ form.special_requests.label(class="form-label fw-semibold") }}
+                {{ form.special_requests(class="form-control", rows="3") }}
+              </div>
+            </div>
+            <button type="submit" class="btn btn-brand btn-lg w-100">Continue to Payment <i class="fa-solid fa-arrow-right ms-1"></i></button>
+          </form>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="card-elevated p-4 sticky-top" style="top:100px;">
+          <img src="{{ url_for('static', filename='images/' ~ destination.image) }}" class="rounded-3 mb-3" style="height:160px;width:100%;object-fit:cover;">
+          <h6 class="fw-bold">{{ destination.city }}, {{ destination.country }}</h6>
+          <p class="text-muted small mb-3"><i class="fa-solid fa-plane me-1"></i>{{ destination.airport_name }} ({{ destination.airport_code }})</p>
+          <hr>
+          <div class="d-flex justify-content-between mb-2"><span>Base Fare</span><strong>PKR {{ "{:,.0f}".format(destination.starting_price) }}</strong></div>
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <span class="fw-bold">Estimated Total</span>
+            <span id="price-estimate" class="fs-4 fw-bold text-brand">PKR {{ "{:,.0f}".format(destination.starting_price) }}</span>
+          </div>
+          <p class="text-muted small mt-2 mb-0">Final price is calculated automatically based on passengers, seat class and trip type.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

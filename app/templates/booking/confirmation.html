@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Booking Confirmation{% endblock %}
+{% block content %}
+<section class="section-pad" style="min-height:80vh;">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card-elevated p-4 p-md-5 text-center" data-aos="zoom-in">
+          <img src="{{ url_for('static', filename='images/logo.png') }}" style="height:70px;" class="mb-3" alt="logo">
+          {% if booking.status == 'confirmed' or booking.status == 'completed' %}
+          <i class="fa-solid fa-circle-check text-success" style="font-size:4rem;"></i>
+          <h3 class="mt-3">Booking Confirmed!</h3>
+          {% else %}
+          <i class="fa-solid fa-clock text-warning" style="font-size:4rem;"></i>
+          <h3 class="mt-3">Booking Created — Payment Pending</h3>
+          {% endif %}
+          <p class="text-muted">A confirmation has been sent to {{ booking.email }}</p>
+
+          <div class="row text-start mt-4 g-3">
+            <div class="col-md-6"><strong>Booking ID:</strong> {{ booking.booking_id }}</div>
+            <div class="col-md-6"><strong>Ticket Number:</strong> {{ booking.ticket_number }}</div>
+            <div class="col-md-6"><strong>Destination:</strong> {{ booking.destination.city }}, {{ booking.destination.country }}</div>
+            <div class="col-md-6"><strong>Airline:</strong> {{ booking.airline.name }}</div>
+            <div class="col-md-6"><strong>Departure:</strong> {{ booking.departure_date.strftime('%d %b %Y') }}</div>
+            <div class="col-md-6"><strong>Return:</strong> {{ booking.return_date.strftime('%d %b %Y') if booking.return_date else 'N/A' }}</div>
+            <div class="col-md-6"><strong>Passengers:</strong> {{ booking.total_passengers }}</div>
+            <div class="col-md-6"><strong>Seat Class:</strong> {{ booking.seat_class }}</div>
+            <div class="col-md-6"><strong>Total Price:</strong> PKR {{ "{:,.0f}".format(booking.total_price) }}</div>
+            <div class="col-md-6"><strong>Status:</strong> <span class="badge badge-status-{{ booking.status }}">{{ booking.status|capitalize }}</span></div>
+          </div>
+
+          <div class="d-flex justify-content-center gap-3 mt-4">
+            {% if booking.status == 'pending' %}
+            <a href="{{ url_for('payment.checkout', booking_id=booking.id) }}" class="btn btn-brand btn-lg"><i class="fa-solid fa-credit-card me-2"></i>Complete Payment</a>
+            {% else %}
+            <a href="{{ url_for('payment.invoice', booking_id=booking.id) }}" class="btn btn-brand btn-lg"><i class="fa-solid fa-file-invoice me-2"></i>View Invoice</a>
+            {% endif %}
+            <a href="{{ url_for('customer.dashboard') }}" class="btn btn-outline-brand btn-lg">Go to Dashboard</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

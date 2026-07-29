@@ -1,0 +1,68 @@
+{% extends "admin/_base.html" %}
+{% block title %}Booking {{ booking.booking_id }}{% endblock %}
+{% block page_title %}Booking Detail — {{ booking.booking_id }}{% endblock %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="admin-table-card mb-4">
+      <h6 class="mb-3">Passenger &amp; Trip Information</h6>
+      <table class="table table-borderless">
+        <tr><th style="width:220px;">Booking ID</th><td>{{ booking.booking_id }}</td></tr>
+        <tr><th>Ticket Number</th><td>{{ booking.ticket_number }}</td></tr>
+        <tr><th>Passenger Name</th><td>{{ booking.passenger_name }}</td></tr>
+        <tr><th>Passport Number</th><td>{{ booking.passport_number }}</td></tr>
+        <tr><th>CNIC</th><td>{{ booking.cnic }}</td></tr>
+        <tr><th>Phone</th><td>{{ booking.phone }}</td></tr>
+        <tr><th>Email</th><td>{{ booking.email }}</td></tr>
+        <tr><th>Destination</th><td>{{ booking.destination.city }}, {{ booking.destination.country }}</td></tr>
+        <tr><th>Airline</th><td>{{ booking.airline.name }}</td></tr>
+        <tr><th>Trip Type</th><td>{{ "Round Trip" if booking.trip_type == "round_trip" else "One Way" }}</td></tr>
+        <tr><th>Departure</th><td>{{ booking.departure_date.strftime('%d %b %Y') }}</td></tr>
+        <tr><th>Return</th><td>{{ booking.return_date.strftime('%d %b %Y') if booking.return_date else 'N/A' }}</td></tr>
+        <tr><th>Passengers</th><td>{{ booking.adults }} Adults, {{ booking.children }} Children, {{ booking.infants }} Infants</td></tr>
+        <tr><th>Seat Class</th><td>{{ booking.seat_class }}</td></tr>
+        <tr><th>Meal Preference</th><td>{{ booking.meal_preference }}</td></tr>
+        <tr><th>Special Requests</th><td>{{ booking.special_requests or '-' }}</td></tr>
+        <tr><th>Total Price</th><td class="fw-bold text-brand">PKR {{ "{:,.0f}".format(booking.total_price) }}</td></tr>
+      </table>
+    </div>
+
+    <div class="admin-table-card">
+      <h6 class="mb-3">Payment History</h6>
+      <div class="table-responsive">
+        <table class="table table-sm table-brand">
+          <thead><tr><th>Receipt No</th><th>Method</th><th>Transaction ID</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
+          <tbody>
+            {% for p in booking.payments %}
+            <tr><td>{{ p.receipt_number }}</td><td>{{ p.method }}</td><td>{{ p.transaction_id }}</td>
+                <td>PKR {{ "{:,.0f}".format(p.amount) }}</td>
+                <td><span class="badge badge-status-{{ p.status }}">{{ p.status|capitalize }}</span></td>
+                <td>{{ p.paid_at.strftime('%d %b %Y') }}</td></tr>
+            {% else %}
+            <tr><td colspan="6" class="text-center text-muted py-3">No payments recorded yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="admin-table-card">
+      <h6 class="mb-3">Update Status</h6>
+      <form method="POST" action="{{ url_for('admin.update_booking_status', booking_id=booking.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <select name="status" class="form-select mb-3">
+          {% for s in ['pending','confirmed','cancelled','completed'] %}
+          <option value="{{ s }}" {% if booking.status == s %}selected{% endif %}>{{ s|capitalize }}</option>
+          {% endfor %}
+        </select>
+        <button class="btn btn-brand w-100">Update Status</button>
+      </form>
+      <hr>
+      <a href="{{ url_for('payment.invoice', booking_id=booking.id) }}" class="btn btn-outline-brand w-100 mb-2"><i class="fa-solid fa-file-invoice me-2"></i>View Invoice</a>
+      <a href="{{ url_for('admin.bookings') }}" class="btn btn-outline-secondary w-100">Back to Bookings</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

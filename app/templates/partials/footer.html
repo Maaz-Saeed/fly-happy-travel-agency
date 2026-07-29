@@ -1,0 +1,74 @@
+<footer class="site-footer">
+  <div class="footer-newsletter">
+    <div class="container py-5">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-6" data-aos="fade-right">
+          <h3 class="text-white mb-1"><i class="fa-solid fa-paper-plane me-2"></i>Subscribe to our Newsletter</h3>
+          <p class="text-white-50 mb-0">Get the latest offers, packages and travel news straight to your inbox.</p>
+        </div>
+        <div class="col-lg-6" data-aos="fade-left">
+          <form action="{{ url_for('public.newsletter_subscribe') }}" method="POST" class="d-flex gap-2">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="email" name="email" required class="form-control form-control-lg" placeholder="Enter your email address">
+            <button type="submit" class="btn btn-gold btn-lg text-nowrap">Subscribe</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container py-5">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <a href="{{ url_for('public.home') }}" class="d-flex align-items-center gap-2 mb-3">
+          <img src="{{ url_for('static', filename='images/logo.png') }}" alt="logo" style="height:50px;">
+          <span class="text-white fw-bold fs-5">{{ company_short_name }}</span>
+        </a>
+        <p class="text-white-50">{{ company_name }} is a licensed travel agency (License No. {{ company_license }}) offering flights, visas, Hajj &amp; Umrah, and holiday packages worldwide.</p>
+        <div class="social-icons">
+          <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#"><i class="fa-brands fa-twitter"></i></a>
+          <a href="#"><i class="fa-brands fa-youtube"></i></a>
+          <a href="https://wa.me/{{ company_whatsapp|replace(' ','')|replace('+','') }}"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-4 col-6">
+        <h6 class="footer-heading">Company</h6>
+        <ul class="footer-links">
+          <li><a href="{{ url_for('public.about') }}">About Us</a></li>
+          <li><a href="{{ url_for('public.team') }}">Our Team</a></li>
+          <li><a href="{{ url_for('public.news') }}">News</a></li>
+          <li><a href="{{ url_for('public.gallery') }}">Gallery</a></li>
+          <li><a href="{{ url_for('public.contact') }}">Contact</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-2 col-md-4 col-6">
+        <h6 class="footer-heading">Services</h6>
+        <ul class="footer-links">
+          <li><a href="{{ url_for('public.services') }}">Air Ticketing</a></li>
+          <li><a href="{{ url_for('public.services') }}">Visa Processing</a></li>
+          <li><a href="{{ url_for('public.packages') }}">Umrah &amp; Hajj</a></li>
+          <li><a href="{{ url_for('public.packages') }}">Holiday Packages</a></li>
+          <li><a href="{{ url_for('public.destinations') }}">Destinations</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-4 col-md-4">
+        <h6 class="footer-heading">Contact Us</h6>
+        <ul class="footer-links">
+          <li><i class="fa-solid fa-location-dot me-2"></i>{{ company_address }}</li>
+          <li><i class="fa-solid fa-phone me-2"></i><a href="tel:{{ company_phone }}">{{ company_phone }}</a></li>
+          <li><i class="fa-solid fa-envelope me-2"></i><a href="mailto:{{ company_email }}">{{ company_email }}</a></li>
+          <li><i class="fa-solid fa-clock me-2"></i>{{ company_hours }}</li>
+          <li><i class="fa-solid fa-triangle-exclamation me-2"></i>Emergency: {{ company_emergency_phone }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom py-3">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+      <small class="text-white-50">&copy; {{ current_year }} {{ company_name }}. All Rights Reserved. | License No. {{ company_license }}</small>
+      <small class="text-white-50">Designed &amp; Developed by <a href="{{ url_for('public.portfolio') }}" class="text-gold">Maaz Saeed</a></small>
+    </div>
+  </div>
+</footer>

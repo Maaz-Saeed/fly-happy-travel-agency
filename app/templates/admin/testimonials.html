@@ -1,0 +1,54 @@
+{% extends "admin/_base.html" %}
+{% block title %}Testimonials{% endblock %}
+{% block page_title %}Manage Testimonials{% endblock %}
+{% block content %}
+<div class="admin-table-card">
+  <div class="d-flex justify-content-end mb-3">
+    <button class="btn btn-brand" data-bs-toggle="modal" data-bs-target="#addTestimonialModal"><i class="fa-solid fa-plus me-1"></i>Add Testimonial</button>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-brand align-middle">
+      <thead><tr><th>Customer</th><th>Destination</th><th>Rating</th><th>Message</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for t in items %}
+        <tr>
+          <td>{{ t.customer_name }}</td><td>{{ t.destination }}</td><td>{{ t.rating }} <i class="fa-solid fa-star text-warning"></i></td>
+          <td style="max-width:280px;">{{ t.message[:100] }}{% if t.message|length > 100 %}...{% endif %}</td>
+          <td>{% if t.is_approved %}<span class="badge bg-success">Approved</span>{% else %}<span class="badge bg-secondary">Hidden</span>{% endif %}</td>
+          <td class="d-flex gap-1">
+            <form method="POST" action="{{ url_for('admin.toggle_testimonial', item_id=t.id) }}">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-sm btn-outline-brand">{{ 'Hide' if t.is_approved else 'Approve' }}</button>
+            </form>
+            <form method="POST" action="{{ url_for('admin.delete_testimonial', item_id=t.id) }}" onsubmit="return confirm('Delete this testimonial?');">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6" class="text-center text-muted py-4">No testimonials yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal fade" id="addTestimonialModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="modal-header"><h5 class="modal-title">Add Testimonial</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+          <div class="mb-3"><label class="form-label">Customer Name</label><input name="customer_name" class="form-control" required></div>
+          <div class="mb-3"><label class="form-label">Destination</label><input name="destination" class="form-control"></div>
+          <div class="mb-3"><label class="form-label">Rating (1-5)</label><input type="number" min="1" max="5" name="rating" value="5" class="form-control"></div>
+          <div class="mb-3"><label class="form-label">Message</label><textarea name="message" class="form-control" rows="4" required></textarea></div>
+        </div>
+        <div class="modal-footer"><button type="submit" class="btn btn-brand">Add Testimonial</button></div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

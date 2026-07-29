@@ -1,0 +1,56 @@
+{% extends "admin/_base.html" %}
+{% block title %}Employees{% endblock %}
+{% block page_title %}Manage Employees{% endblock %}
+{% block content %}
+<div class="admin-table-card">
+  <div class="d-flex justify-content-end mb-3">
+    <button class="btn btn-brand" data-bs-toggle="modal" data-bs-target="#addEmployeeModal"><i class="fa-solid fa-plus me-1"></i>Add Employee</button>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-brand align-middle">
+      <thead><tr><th>Name</th><th>Email</th><th>Designation</th><th>Department</th><th>Hire Date</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for e in employees %}
+        <tr>
+          <td>{{ e.user.full_name }}</td><td>{{ e.user.email }}</td><td>{{ e.designation }}</td>
+          <td>{{ e.department or '-' }}</td><td>{{ e.hire_date.strftime('%d %b %Y') if e.hire_date else '-' }}</td>
+          <td>{% if e.is_active %}<span class="badge bg-success">Active</span>{% else %}<span class="badge bg-secondary">Inactive</span>{% endif %}</td>
+          <td>
+            <form method="POST" action="{{ url_for('admin.toggle_employee', item_id=e.id) }}">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-sm btn-outline-brand">{{ 'Deactivate' if e.is_active else 'Activate' }}</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" class="text-center text-muted py-4">No employees found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal fade" id="addEmployeeModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="modal-header"><h5 class="modal-title">Add Employee</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+          <div class="mb-3"><label class="form-label">Full Name</label><input name="full_name" class="form-control" required></div>
+          <div class="mb-3"><label class="form-label">Email</label><input type="email" name="email" class="form-control" required></div>
+          <div class="mb-3"><label class="form-label">Phone</label><input name="phone" class="form-control"></div>
+          <div class="mb-3"><label class="form-label">Designation</label>
+            <select name="designation" class="form-select">
+              {% for d in ['Manager','Ticketing Officer','Visa Consultant','Travel Consultant','Account Officer','Support Officer'] %}<option value="{{ d }}">{{ d }}</option>{% endfor %}
+            </select>
+          </div>
+          <div class="mb-3"><label class="form-label">Department</label><input name="department" class="form-control" value="Operations"></div>
+          <div class="mb-3"><label class="form-label">Temporary Password</label><input name="password" class="form-control" value="Employee@123"></div>
+        </div>
+        <div class="modal-footer"><button type="submit" class="btn btn-brand">Add Employee</button></div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

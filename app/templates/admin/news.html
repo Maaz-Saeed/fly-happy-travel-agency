@@ -1,0 +1,49 @@
+{% extends "admin/_base.html" %}
+{% block title %}News{% endblock %}
+{% block page_title %}Manage News{% endblock %}
+{% block content %}
+<div class="admin-table-card">
+  <div class="d-flex justify-content-end mb-3">
+    <button class="btn btn-brand" data-bs-toggle="modal" data-bs-target="#addNewsModal"><i class="fa-solid fa-plus me-1"></i>Add Article</button>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-brand align-middle">
+      <thead><tr><th>Title</th><th>Slug</th><th>Author</th><th>Published</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for n in items %}
+        <tr>
+          <td>{{ n.title }}</td><td>{{ n.slug }}</td><td>{{ n.author }}</td><td>{{ n.published_at.strftime('%d %b %Y') }}</td>
+          <td>
+            <form method="POST" action="{{ url_for('admin.delete_news', item_id=n.id) }}" onsubmit="return confirm('Delete this article?');">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" class="text-center text-muted py-4">No news articles yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal fade" id="addNewsModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="modal-header"><h5 class="modal-title">Add News Article</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+          <div class="mb-3"><label class="form-label">Title</label><input name="title" class="form-control" required></div>
+          <div class="mb-3"><label class="form-label">URL Slug (optional)</label><input name="slug" class="form-control" placeholder="auto-generated-if-blank"></div>
+          <div class="mb-3"><label class="form-label">Summary</label><input name="summary" class="form-control"></div>
+          <div class="mb-3"><label class="form-label">Content</label><textarea name="content" class="form-control" rows="5" required></textarea></div>
+          <div class="mb-3"><label class="form-label">Author</label><input name="author" class="form-control" value="Fly Happy Team"></div>
+        </div>
+        <div class="modal-footer"><button type="submit" class="btn btn-brand">Publish Article</button></div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "admin/_base.html" %}
+{% block title %}Airlines{% endblock %}
+{% block page_title %}Manage Airlines{% endblock %}
+{% block content %}
+<div class="admin-table-card">
+  <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <form method="GET" class="d-flex gap-2">
+      <input type="text" name="q" value="{{ search }}" class="form-control" placeholder="Search airline...">
+      <button class="btn btn-outline-brand">Search</button>
+    </form>
+    <button class="btn btn-brand" data-bs-toggle="modal" data-bs-target="#addAirlineModal"><i class="fa-solid fa-plus me-1"></i>Add Airline</button>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-brand align-middle">
+      <thead><tr><th>Name</th><th>Code</th><th>Country</th><th>Rating</th><th>Business</th><th>Economy</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for a in airlines %}
+        <tr>
+          <td>{{ a.name }}</td><td>{{ a.iata_code }}</td><td>{{ a.country }}</td><td>{{ a.rating }}</td>
+          <td>{{ "Yes" if a.business_class else "No" }}</td><td>{{ "Yes" if a.economy_class else "No" }}</td>
+          <td class="d-flex gap-1">
+            <button class="btn btn-sm btn-outline-brand" data-bs-toggle="modal" data-bs-target="#editAirline{{ a.id }}"><i class="fa-solid fa-pen"></i></button>
+            <form method="POST" action="{{ url_for('admin.delete_airline', item_id=a.id) }}" onsubmit="return confirm('Delete this airline?');">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" class="text-center text-muted py-4">No airlines found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% for a in airlines %}
+<div class="modal fade" id="editAirline{{ a.id }}" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="POST" action="{{ url_for('admin.edit_airline', item_id=a.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="modal-header"><h5 class="modal-title">Edit {{ a.name }}</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+          <div class="mb-3"><label class="form-label">Name</label><input name="name" value="{{ a.name }}" class="form-control" required></div>
+          <div class="row g-3">
+            <div class="col-md-6"><label class="form-label">IATA Code</label><input name="iata_code" value="{{ a.iata_code or '' }}" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label">Country</label><input name="country" value="{{ a.country or '' }}" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label">Website</label><input name="website" value="{{ a.website or '' }}" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label">Rating</label><input type="number" step="0.1" min="0" max="5" name="rating" value="{{ a.rating }}" class="form-control"></div>
+            <div class="col-md-6 d-flex align-items-end"><div class="form-check"><input type="checkbox" class="form-check-input" name="business_class" {% if a.business_class %}checked{% endif %}><label class="form-check-label">Business Class Available</label></div></div>
+            <div class="col-md-6 d-flex align-items-end"><div class="form-check"><input type="checkbox" class="form-check-input" name="economy_class" {% if a.economy_class %}checked{% endif %}><label class="form-check-label">Economy Class Available</label></div></div>
+          </div>
+        </div>
+        <div class="modal-footer"><button type="submit" class="btn btn-brand">Save Changes</button></div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+<div class="modal fade" id="addAirlineModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="modal-header"><h5 class="modal-title">Add Airline</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+          <div class="mb-3"><label class="form-label">Name</label><input name="name" class="form-control" required></div>
+          <div class="row g-3">
+            <div class="col-md-6"><label class="form-label">IATA Code</label><input name="iata_code" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label">Country</label><input name="country" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label">Website</label><input name="website" class="form-control" placeholder="https://"></div>
+            <div class="col-md-6"><label class="form-label">Rating</label><input type="number" step="0.1" min="0" max="5" name="rating" value="4.0" class="form-control"></div>
+            <div class="col-md-6 d-flex align-items-end"><div class="form-check"><input type="checkbox" class="form-check-input" name="business_class" checked><label class="form-check-label">Business Class Available</label></div></div>
+            <div class="col-md-6 d-flex align-items-end"><div class="form-check"><input type="checkbox" class="form-check-input" name="economy_class" checked><label class="form-check-label">Economy Class Available</label></div></div>
+          </div>
+        </div>
+        <div class="modal-footer"><button type="submit" class="btn btn-brand">Add Airline</button></div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% block title %}About Us{% endblock %}
+{% block content %}
+<div class="page-header-banner">
+  <div class="container">
+    <h1 data-aos="fade-up">About {{ company_short_name }}</h1>
+    <p class="breadcrumb-custom"><a href="{{ url_for('public.home') }}">Home</a> / <span class="current">About</span></p>
+  </div>
+</div>
+
+<!-- History -->
+<section class="section-pad">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6" data-aos="fade-right">
+        <span class="section-eyebrow">Our Story</span>
+        <h2>A Legacy of Trust Since 2004</h2>
+        <p class="text-muted">{{ company_name }} was founded with a simple mission: to make world-class travel accessible, affordable and worry-free for every Pakistani traveler. Starting as a small ticketing counter in Islamabad, we have grown into a full-service travel house licensed under <strong>{{ company_license }}</strong>, serving thousands of families, students, corporate clients and pilgrims across more than 150 destinations.</p>
+        <p class="text-muted">Today, {{ company_short_name }} is recognized as one of the most reliable names in air ticketing, visa processing, and religious tourism (Hajj &amp; Umrah), backed by a dedicated team of certified travel consultants.</p>
+      </div>
+      <div class="col-lg-6" data-aos="fade-left">
+        <img src="{{ url_for('static', filename='images/gallery/gallery6.jpg') }}" class="img-fluid rounded-4 shadow" alt="Our office">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Mission / Vision / Objectives -->
+<section class="section-pad bg-brand-pale">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-4" data-aos="fade-up">
+        <div class="card-elevated p-4 h-100">
+          <div class="service-icon-box"><i class="fa-solid fa-bullseye"></i></div>
+          <h5>Our Mission</h5>
+          <p class="text-muted mb-0">To deliver seamless, transparent and affordable travel solutions while exceeding customer expectations at every step of the journey.</p>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="card-elevated p-4 h-100">
+          <div class="service-icon-box"><i class="fa-solid fa-eye"></i></div>
+          <h5>Our Vision</h5>
+          <p class="text-muted mb-0">To become Pakistan's most trusted international travel brand, connecting people to the world through innovation and integrity.</p>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="service-icon-box"><i class="fa-solid fa-list-check"></i></div>
+          <h5>Our Objectives</h5>
+          <p class="text-muted mb-0">Expand to 200+ destinations, maintain 24/7 customer support, and digitize every step of the booking &amp; visa journey.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Core Values -->
+<section class="section-pad">
+  <div class="container">
+    <div class="text-center section-title" data-aos="fade-up">
+      <span class="section-eyebrow">What Drives Us</span>
+      <h2>Our Core Values</h2>
+    </div>
+    <div class="row g-4">
+      {% for icon, title, desc in [
+        ('fa-handshake','Integrity','Transparent pricing and honest advice, always.'),
+        ('fa-star','Excellence','Consistently delivering premium service quality.'),
+        ('fa-users','Customer First','Every decision starts with the needs of our travelers.'),
+        ('fa-bolt','Innovation','Continuously improving through modern technology.')
+      ] %}
+      <div class="col-md-3 col-6 text-center" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 50 }}">
+        <div class="service-icon-box mx-auto"><i class="fa-solid {{ icon }}"></i></div>
+        <h6 class="fw-bold">{{ title }}</h6>
+        <p class="text-muted small">{{ desc }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- License & Office Info -->
+<section class="section-pad bg-brand-pale">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-6" data-aos="fade-right">
+        <div class="card-elevated p-4 h-100">
+          <h5><i class="fa-solid fa-certificate text-brand me-2"></i>License Information</h5>
+          <table class="table table-borderless mb-0">
+            <tr><th>Company Name</th><td>{{ company_name }}</td></tr>
+            <tr><th>License Number</th><td>{{ company_license }}</td></tr>
+            <tr><th>Category</th><td>IATA Accredited Travel Agency</td></tr>
+            <tr><th>Established</th><td>2004</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="col-md-6" data-aos="fade-left">
+        <div class="card-elevated p-4 h-100">
+          <h5><i class="fa-solid fa-building text-brand me-2"></i>Office Information</h5>
+          <table class="table table-borderless mb-0">
+            <tr><th>Address</th><td>{{ company_address }}</td></tr>
+            <tr><th>Phone</th><td>{{ company_phone }}</td></tr>
+            <tr><th>Email</th><td>{{ company_email }}</td></tr>
+            <tr><th>Working Hours</th><td>{{ company_hours }}</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Timeline -->
+<section class="section-pad">
+  <div class="container">
+    <div class="text-center section-title" data-aos="fade-up">
+      <span class="section-eyebrow">Milestones</span>
+      <h2>Company Timeline</h2>
+    </div>
+    <div class="timeline" data-aos="fade-up">
+      {% for year, text in [
+        ('2004','Fly Happy International Travels founded in Islamabad with a small ticketing desk.'),
+        ('2009','Launched dedicated visa processing services for Schengen &amp; GCC countries.'),
+        ('2013','Became an approved Hajj &amp; Umrah operator, serving over 1,000 pilgrims per year.'),
+        ('2017','Opened corporate travel management division for business clients.'),
+        ('2021','Crossed 5,000+ satisfied customers and 40+ airline partnerships.'),
+        ('2025','Launched fully digital booking platform with real-time support and online payments.')
+      ] %}
+      <div class="timeline-item">
+        <div class="timeline-year">{{ year }}</div>
+        <p class="mb-0 text-muted">{{ text|safe }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- CEO Message -->
+<section class="section-pad bg-brand-pale">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-4 text-center" data-aos="fade-right">
+        <img src="{{ url_for('static', filename='images/team/team1.jpg') }}" class="rounded-circle shadow" style="width:220px;height:220px;object-fit:cover;" alt="CEO">
+        <h5 class="mt-3 mb-0">Ahmed Raza</h5>
+        <p class="text-muted">General Manager &amp; CEO</p>
+      </div>
+      <div class="col-lg-8" data-aos="fade-left">
+        <span class="section-eyebrow">CEO Message</span>
+        <h2 class="mb-3">"Every journey begins with trust."</h2>
+        <p class="text-muted">"When we started {{ company_short_name }}, our goal was never just to sell tickets — it was to build lifelong relationships with the families and businesses we serve. Two decades later, that promise remains unchanged. Whether you're performing Umrah, relocating for work, or taking your family on a long-awaited holiday, our team treats your journey as our own responsibility. Thank you for trusting us with your travels."</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Awards & Achievements -->
+<section class="section-pad">
+  <div class="container">
+    <div class="text-center section-title" data-aos="fade-up">
+      <span class="section-eyebrow">Recognition</span>
+      <h2>Awards &amp; Achievements</h2>
+    </div>
+    <div class="row g-4">
+      {% for icon, title, year in [
+        ('fa-trophy','Best Emerging Travel Agency','2025'),
+        ('fa-award','Excellence in Customer Service','2023'),
+        ('fa-medal','Top Umrah Operator Award','2021'),
+        ('fa-crown','5000+ Customers Milestone','2024')
+      ] %}
+      <div class="col-md-3 col-6 text-center" data-aos="zoom-in" data-aos-delay="{{ loop.index0 * 50 }}">
+        <div class="service-icon-box mx-auto" style="background:var(--gold); color:#1c2b24;"><i class="fa-solid {{ icon }}"></i></div>
+        <h6 class="fw-bold mb-0">{{ title }}</h6>
+        <small class="text-muted">{{ year }}</small>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

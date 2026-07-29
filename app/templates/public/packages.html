@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Travel Packages{% endblock %}
+{% block content %}
+<div class="page-header-banner">
+  <div class="container">
+    <h1 data-aos="fade-up">Travel Packages</h1>
+    <p class="breadcrumb-custom"><a href="{{ url_for('public.home') }}">Home</a> / <span class="current">Packages</span></p>
+  </div>
+</div>
+<section class="section-pad">
+  <div class="container">
+    <div class="d-flex flex-wrap gap-2 justify-content-center mb-4" data-aos="fade-up">
+      <a href="{{ url_for('public.packages') }}" class="btn btn-sm {{ 'btn-brand' if not category else 'btn-outline-brand' }}">All</a>
+      {% for c in categories %}
+      <a href="{{ url_for('public.packages', category=c) }}" class="btn btn-sm {{ 'btn-brand' if category == c else 'btn-outline-brand' }}">{{ c }}</a>
+      {% endfor %}
+    </div>
+    <div class="row g-4">
+      {% for p in packages %}
+      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ (loop.index0 % 6) * 40 }}">
+        <div class="card card-elevated package-card h-100 position-relative">
+          {% if p.is_featured %}<span class="badge bg-warning text-dark badge-category">Featured</span>{% endif %}
+          <img src="{{ url_for('static', filename='images/' ~ p.image) }}" class="card-img-top-fixed" alt="{{ p.name }}">
+          <div class="card-body">
+            <span class="badge bg-brand-pale text-brand mb-2">{{ p.category }}</span>
+            <h6 class="fw-bold">{{ p.name }}</h6>
+            <p class="text-muted small mb-2"><i class="fa-solid fa-calendar-days me-1"></i>{{ p.duration_days }} Days &bull; <i class="fa-solid fa-location-dot me-1"></i>{{ p.destination.city if p.destination else '' }}</p>
+            <p class="text-muted small">{{ p.inclusions }}</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="fw-bold text-brand fs-5">PKR {{ "{:,.0f}".format(p.price) }}</span>
+              <a href="{{ url_for('booking.search', q=p.destination.city if p.destination else '') }}" class="btn btn-sm btn-brand">Book Now</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <div class="col-12 text-center py-5"><p class="text-muted">No packages found in this category.</p></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "admin/_base.html" %}
+{% block title %}Customers{% endblock %}
+{% block page_title %}Manage Customers{% endblock %}
+{% block content %}
+<div class="admin-table-card">
+  <form method="GET" class="row g-2 mb-3">
+    <div class="col-md-4">
+      <input type="text" name="q" value="{{ search }}" class="form-control" placeholder="Search by name, email, phone or passport...">
+    </div>
+    <div class="col-md-2"><button class="btn btn-brand w-100">Search</button></div>
+  </form>
+  <div class="table-responsive">
+    <table class="table table-brand align-middle">
+      <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>CNIC</th><th>Joined</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for c in customers %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ c.full_name }}</td>
+          <td>{{ c.email }}</td>
+          <td>{{ c.phone }}</td>
+          <td>{{ c.cnic or '-' }}</td>
+          <td>{{ c.created_at.strftime('%d %b %Y') }}</td>
+          <td>{% if c.is_active_account %}<span class="badge bg-success">Active</span>{% else %}<span class="badge bg-secondary">Inactive</span>{% endif %}</td>
+          <td>
+            <form method="POST" action="{{ url_for('admin.toggle_customer', user_id=c.id) }}" class="d-inline">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-sm btn-outline-brand">{{ 'Deactivate' if c.is_active_account else 'Activate' }}</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="8" class="text-center text-muted py-4">No customers found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

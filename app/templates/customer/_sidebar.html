@@ -1,0 +1,16 @@
+<div class="dash-sidebar py-4">
+  <div class="text-center mb-4 px-3">
+    <img src="{{ url_for('static', filename='images/' ~ (current_user.photo if current_user.photo else 'default_avatar.png')) }}"
+         class="rounded-circle mb-2" style="width:80px;height:80px;object-fit:cover;" alt="avatar">
+    <h6 class="mb-0">{{ current_user.full_name }}</h6>
+    <small class="text-white-50">{{ current_user.email }}</small>
+  </div>
+  <a href="{{ url_for('customer.dashboard') }}" class="{{ 'active' if request.endpoint == 'customer.dashboard' }}"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+  <a href="{{ url_for('customer.bookings') }}" class="{{ 'active' if request.endpoint == 'customer.bookings' }}"><i class="fa-solid fa-ticket"></i> My Bookings</a>
+  <a href="{{ url_for('customer.payments') }}" class="{{ 'active' if request.endpoint == 'customer.payments' }}"><i class="fa-solid fa-credit-card"></i> Payment History</a>
+  <a href="{{ url_for('customer.profile') }}" class="{{ 'active' if request.endpoint == 'customer.profile' }}"><i class="fa-solid fa-user"></i> Update Profile</a>
+  <a href="{{ url_for('customer.change_password') }}" class="{{ 'active' if request.endpoint == 'customer.change_password' }}"><i class="fa-solid fa-key"></i> Change Password</a>
+  <a href="{{ url_for('customer.support') }}" class="{{ 'active' if request.endpoint == 'customer.support' }}"><i class="fa-solid fa-headset"></i> Contact Support</a>
+  <a href="{{ url_for('booking.search') }}"><i class="fa-solid fa-plane-departure"></i> New Booking</a>
+  <a href="{{ url_for('auth.logout') }}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+</div>

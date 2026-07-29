@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Developer Portfolio{% endblock %}
+{% block content %}
+<div class="page-header-banner">
+  <div class="container">
+    <h1 data-aos="fade-up">Developer Portfolio</h1>
+    <p class="breadcrumb-custom"><a href="{{ url_for('public.home') }}">Home</a> / <span class="current">Portfolio</span></p>
+  </div>
+</div>
+
+<section class="section-pad">
+  <div class="container">
+    <div class="row g-5 align-items-center mb-5">
+      <div class="col-lg-4 text-center" data-aos="fade-right">
+        <img src="https://ui-avatars.com/api/?name=Maaz+Saeed&background=147a49&color=fff&size=300&bold=true"
+             class="rounded-circle shadow mb-3" style="width:220px;height:220px;object-fit:cover;" alt="Maaz Saeed">
+        <p class="text-muted small">Placeholder photo — replace with your own professional headshot.</p>
+      </div>
+      <div class="col-lg-8" data-aos="fade-left">
+        <span class="section-eyebrow">Software Engineer</span>
+        <h2 class="mb-2">Maaz Saeed</h2>
+        <p class="text-muted mb-1"><i class="fa-solid fa-id-badge me-2 text-brand"></i>Registration No: <strong>SU-23-01-002-031</strong></p>
+        <p class="text-muted mb-1"><i class="fa-solid fa-graduation-cap me-2 text-brand"></i>Program: <strong>BS Software Engineering</strong></p>
+        <p class="text-muted mb-3"><i class="fa-solid fa-layer-group me-2 text-brand"></i>Semester: <strong>6th</strong></p>
+        <p class="text-muted">This Travel Agency Management System — {{ company_name }} — was designed and developed as a comprehensive full-stack project demonstrating skills in backend architecture, database design, UI/UX design and secure web application development using Python Flask.</p>
+        <div class="d-flex gap-2 mt-3">
+          <a href="#" class="btn btn-outline-brand"><i class="fa-brands fa-github me-2"></i>GitHub</a>
+          <a href="#" class="btn btn-outline-brand"><i class="fa-brands fa-linkedin me-2"></i>LinkedIn</a>
+          <a href="{{ url_for('public.contact') }}" class="btn btn-brand"><i class="fa-solid fa-envelope me-2"></i>Contact</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-6" data-aos="fade-up">
+        <div class="card-elevated p-4 h-100">
+          <h5 class="mb-3"><i class="fa-solid fa-code text-brand me-2"></i>Technical Skills</h5>
+          {% for skill, pct in [('Python & Flask',92),('Database Design (SQL)',88),('JavaScript',80),('HTML5 / CSS3 / Bootstrap 5',90),('UI/UX Design',78),('Git & Version Control',82)] %}
+          <div class="mb-3">
+            <div class="d-flex justify-content-between small mb-1"><span>{{ skill }}</span><span>{{ pct }}%</span></div>
+            <div class="progress" style="height:8px;"><div class="progress-bar bg-brand" style="width:{{ pct }}%"></div></div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+        <div class="card-elevated p-4 h-100">
+          <h5 class="mb-3"><i class="fa-solid fa-book text-brand me-2"></i>Education</h5>
+          <div class="timeline" style="border-left:3px solid var(--brand-pale); padding-left:20px;">
+            <div class="mb-4">
+              <h6 class="fw-bold mb-0">BS Software Engineering</h6>
+              <p class="text-muted small mb-0">6th Semester &bull; Reg. No: SU-23-01-002-031</p>
+            </div>
+            <div>
+              <h6 class="fw-bold mb-0">Intermediate (Pre-Engineering)</h6>
+              <p class="text-muted small mb-0">Completed prior to university enrollment</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-5" data-aos="fade-up">
+      <h5 class="mb-3"><i class="fa-solid fa-diagram-project text-brand me-2"></i>Featured Projects</h5>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="card-elevated p-4 h-100">
+            <h6 class="fw-bold">Fly Happy Travel Agency System</h6>
+            <p class="text-muted small">Full-stack Flask travel agency management platform with booking, payments, admin panel and chatbot.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card-elevated p-4 h-100">
+            <h6 class="fw-bold">Project Two (Placeholder)</h6>
+            <p class="text-muted small">Add a short description of another academic or personal project here.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card-elevated p-4 h-100">
+            <h6 class="fw-bold">Project Three (Placeholder)</h6>
+            <p class="text-muted small">Add a short description of another academic or personal project here.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "admin/_base.html" %}
+{% block title %}FAQs{% endblock %}
+{% block page_title %}Manage FAQs{% endblock %}
+{% block content %}
+<div class="admin-table-card">
+  <div class="d-flex justify-content-end mb-3">
+    <button class="btn btn-brand" data-bs-toggle="modal" data-bs-target="#addFaqModal"><i class="fa-solid fa-plus me-1"></i>Add FAQ</button>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-brand align-middle">
+      <thead><tr><th>Question</th><th>Category</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for f in items %}
+        <tr>
+          <td>{{ f.question }}</td><td>{{ f.category }}</td>
+          <td>
+            <form method="POST" action="{{ url_for('admin.delete_faq', item_id=f.id) }}" onsubmit="return confirm('Delete this FAQ?');">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="3" class="text-center text-muted py-4">No FAQs yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal fade" id="addFaqModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="modal-header"><h5 class="modal-title">Add FAQ</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+          <div class="mb-3"><label class="form-label">Question</label><input name="question" class="form-control" required></div>
+          <div class="mb-3"><label class="form-label">Answer</label><textarea name="answer" class="form-control" rows="4" required></textarea></div>
+          <div class="mb-3"><label class="form-label">Category</label><input name="category" class="form-control" value="General"></div>
+        </div>
+        <div class="modal-footer"><button type="submit" class="btn btn-brand">Add FAQ</button></div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
