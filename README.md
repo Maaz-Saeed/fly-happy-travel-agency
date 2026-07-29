@@ -3,6 +3,8 @@
 [![CI](https://github.com/Maaz-Saeed/fly-happy-travel-agency/actions/workflows/ci.yml/badge.svg)](https://github.com/Maaz-Saeed/fly-happy-travel-agency/actions/workflows/ci.yml)
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3110/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Open Issues](https://img.shields.io/github/issues/Maaz-Saeed/fly-happy-travel-agency)](https://github.com/Maaz-Saeed/fly-happy-travel-agency/issues)
+[![Last Commit](https://img.shields.io/github/last-commit/Maaz-Saeed/fly-happy-travel-agency)](https://github.com/Maaz-Saeed/fly-happy-travel-agency/commits/main)
 
 A full-stack Flask travel agency platform: public marketing site, flight booking with automatic pricing, simulated payments & invoices, a customer dashboard, a full admin back-office with analytics, and a rule-based chatbot.
 
